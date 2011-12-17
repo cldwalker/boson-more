@@ -2,8 +2,16 @@ module Boson
   module PipeRunner
     PIPE = '+'
 
+    # Splits array into array of arrays with given element
+    def self.split_array_by(arr, divider)
+      arr.inject([[]]) {|results, element|
+        (divider == element) ? (results << []) : (results.last << element)
+        results
+      }
+    end
+
     def parse_args(args)
-      @all_args = Util.split_array_by(args, PIPE)
+      @all_args = PipeRunner.split_array_by(args, PIPE)
       args = @all_args[0]
       super(args).tap do |result|
         @all_args[0] = [result[0]] + result[2]
