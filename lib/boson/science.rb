@@ -85,7 +85,7 @@ module Boson
           err.class == OptionCommand::CommandArgumentError || super
         end
 
-        def execute_command
+        def execute_command(cmd, args)
           render_output super
         end
       end
