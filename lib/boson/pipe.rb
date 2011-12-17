@@ -32,6 +32,15 @@ module Boson
   # [*:solo*] Boolean to indicate this pipe can't run with other user pipes or pipes from :pipes option.
   #           If a user calls multiple solo pipes, only the first one detected is called.
   #
+  # == Repo Config
+  # This class adds the following key to the main repo config:
+  #
+  # [:pipe_options] Hash of options available to all option commands for piping (see Pipe). A pipe option has the
+  #                 {normal option attributes}[link:classes/Boson/OptionParser.html#M000081] and these:
+  #                 * :pipe: Specifies the command to call when piping. Defaults to the pipe's option name.
+  #                 * :filter: Boolean which indicates that the pipe command will modify its input with what it returns.
+  #                   Default is false.
+  #
   # === User Pipes Example
   # Let's say you want to have two commands, browser and copy, you want to make available as pipe options:
   #    # Opens url in browser. This command already ships with Boson.
