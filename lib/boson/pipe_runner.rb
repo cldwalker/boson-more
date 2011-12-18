@@ -14,7 +14,7 @@ module Boson
       @all_args = PipeRunner.split_array_by(args, PIPE)
       args = @all_args[0]
       super(args).tap do |result|
-        @all_args[0] = [result[0]] + result[2]
+        @all_args[0] = ([result[0]] + Array(result[2])).compact
       end
     end
 
