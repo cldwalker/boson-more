@@ -62,10 +62,25 @@ module Boson
 
   if defined? BinRunner
     class BinRunner < Runner
-      GLOBAL_OPTIONS.update option_commands:
-        {:type=>:boolean,
-          :desc=>"Toggles on all commands to be defined as option commands" }
+      GLOBAL_OPTIONS.update(
+        option_commands: {
+          :type=>:boolean,
+          :desc=>"Toggles on all commands to be defined as option commands"
+        },
+        render: {:type=>:boolean,
+          :desc=>"Renders a Hirb view from result of command without options"}
+      )
 
+      # [:render] Toggles the auto-rendering done for commands that don't have views. Doesn't affect commands that already have views.
+      #           Default is false. Also see Auto Rendering section below.
+      #
+      # ==== Auto Rendering
+      # Commands that don't have views (defined via render_options) have their return value auto-rendered as a view as follows:
+      # * nil,false and true aren't rendered
+      # * arrays are rendered with Hirb's tables
+      # * non-arrays are printed with inspect()
+      # * Any of these cases can be toggled to render/not render with the global option :render
+      # To turn off auto-rendering by default, add a :no_auto_render: true entry to the main config.
       module Science
         def init
           Command.all_option_commands = true if @options[:option_commands]
