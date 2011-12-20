@@ -35,6 +35,10 @@ module Boson
       end
     end
 
+    def verbose
+      @options[:verbose]
+    end
+
     def abort_with(message)
       if verbose || options[:backtrace]
         message += "\nOriginal error: #{$!}\n  #{$!.backtrace.join("\n  ")}"
