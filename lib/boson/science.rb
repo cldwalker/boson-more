@@ -1,3 +1,4 @@
+require 'boson/view'
 require 'boson/scientist'
 require 'boson/option_command'
 require 'boson/pipe'
