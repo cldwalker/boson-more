@@ -61,6 +61,21 @@ module Boson
     class << self; include Science; end
   end
 
+  # [*:render_options*] Hash of rendering options to pass to OptionParser. If the key :output_class is passed,
+  #                     that class's Hirb config will serve as defaults for this rendering hash.
+  class Command
+    attr_accessor :render_options
+
+    module Science
+      def after_initialize(hash)
+        if hash[:render_options] && (@render_options = hash.delete(:render_options))[:output_class]
+          @render_options = Util.recursive_hash_merge View.class_config(@render_options[:output_class]), @render_options
+        end
+        super
+      end
+    end
+  end
+
   if defined? BinRunner
     class BinRunner < Runner
       GLOBAL_OPTIONS.update(
