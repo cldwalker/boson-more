@@ -1,4 +1,5 @@
 require 'boson/commands/web_core'
+require 'boson/commands/view_core'
 require 'boson/runner'
 
 Boson::Runner::DEFAULT_LIBRARIES << Boson::Commands::WebCore
