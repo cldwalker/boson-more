@@ -126,4 +126,16 @@ module Boson
       end
     end
   end
+
+  # Additional method attributes:
+  # * render_options: Hash to define an OptionParser object for a command's local/global render options (see View).
+  module MethodInspector
+    METHODS << :render_options
+    METHOD_CLASSES[:render_options] = Hash
+    SCRAPEABLE_METHODS << :render_options
+  end
+
+  module CommentInspector
+    EVAL_ATTRIBUTES << :render_options
+  end
 end

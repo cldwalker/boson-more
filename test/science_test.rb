@@ -74,3 +74,9 @@ describe "Manager" do
     end
   end
 end
+
+describe "MethodInspector" do
+  it "render_options sets render_options" do
+    parse("render_options :z=>true; def zee; end")[:render_options].should == {"zee"=>{:z=>true}}
+  end
+end

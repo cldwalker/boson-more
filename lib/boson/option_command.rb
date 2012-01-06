@@ -54,6 +54,10 @@ module Boson
   #   +-------+
   #   3 rows in set
   #   => true
+  #  == Additional config keys for the main repo config
+  #  [:render_options] Hash of render options available to all option commands to be passed to a Hirb view (see View). Since
+  # this merges with default render options, it's possible to override default render options.
+  #  [:no_auto_render] When set, turns off commandline auto-rendering of a command's output. Default is false.
   class OptionCommand
     # ArgumentError specific to @command's arguments
     class CommandArgumentError < ::ArgumentError; end
