@@ -1,3 +1,4 @@
+require 'boson/libraries'
 require 'boson/more_commands'
 require 'boson/pipe_runner'
 require 'boson/more_inspector'
