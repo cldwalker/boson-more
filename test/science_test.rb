@@ -51,30 +51,6 @@ describe "BinRunner" do
 
 end
 
-describe "Manager" do
-  describe "option commands without args" do
-    before_all {
-      reset_boson
-      @library = Library.new(:name=>'blah', :commands=>['foo', 'bar'])
-      Boson.libraries << @library
-      @foo = Command.new(:name=>'foo', :lib=>'blah', :options=>{:fool=>:string}, :args=>'*')
-      Boson.commands << @foo
-      Boson.commands << Command.new(:name=>'bar', :lib=>'blah', :options=>{:bah=>:string})
-    }
-
-    it "are deleted" do
-      Scientist.expects(:redefine_command).with(anything, @foo)
-      Manager.redefine_commands(@library, @library.commands)
-    end
-
-    it "are deleted and printed when verbose" do
-      Scientist.expects(:redefine_command).with(anything, @foo)
-      @library.instance_eval("@options = {:verbose=>true}")
-      capture_stdout { Manager.redefine_commands(@library, @library.commands) } =~ /options.*blah/
-    end
-  end
-end
-
 describe "MethodInspector" do
   it "render_options sets render_options" do
     parse("render_options :z=>true; def zee; end")[:render_options].should == {"zee"=>{:z=>true}}

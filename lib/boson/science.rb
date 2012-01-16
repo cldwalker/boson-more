@@ -1,14 +1,166 @@
 require 'boson/view'
-require 'boson/scientist'
-require 'boson/option_command'
 require 'boson/pipe'
 require 'boson/pipes'
 
 module Boson
-  class Command
-    # [*:option_command*] Boolean to wrap a command with an OptionCommand object i.e. allow commands to have options.
-    INIT_ATTRIBUTES << :option_command
+  class OptionCommand
+    BASIC_OPTIONS.update(
+      :delete_options=>{:type=>:array, :desc=>'Deletes global options starting with given strings' },
+      :usage_options=>{:type=>:string, :desc=>"Render options to pass to usage/help"},
+      :render=> {:type=>:boolean, :desc=>"Toggle a command's default rendering behavior"})
+    PIPE_OPTIONS = {
+      :sort=>{:type=>:string, :desc=>"Sort by given field"},
+      :reverse_sort=>{:type=>:boolean, :desc=>"Reverse a given sort"},
+      :query=>{:type=>:hash, :desc=>"Queries fields given field:search pairs"},
+      :pipes=>{:alias=>'P', :type=>:array, :desc=>"Pipe to commands sequentially"}
+    } #:nodoc:
 
+    RENDER_OPTIONS = {
+      :fields=>{:type=>:array, :desc=>"Displays fields in the order given"},
+      :class=>{:type=>:string, :desc=>"Hirb helper class which renders"},
+      :max_width=>{:type=>:numeric, :desc=>"Max width of a table"},
+      :vertical=>{:type=>:boolean, :desc=>"Display a vertical table"},
+    } #:nodoc:
+
+    # Adds render and pipe global options
+    # For more about pipe and render options see Pipe and View respectively.
+    # === Toggling Views With the Basic Global Option --render
+    # One of the more important global options is --render. This option toggles the rendering of a command's
+    # output done with View and Hirb[http://github.com/cldwalker/hirb].
+    #
+    # Here's a simple example of toggling Hirb's table view:
+    #   # Defined in a library file:
+    #   #@options {}
+    #   def list(options={})
+    #     [1,2,3]
+    #   end
+    #
+    #   Using it in irb:
+    #   >> list
+    #   => [1,2,3]
+    #   >> list '-r'  # or list --render
+    #   +-------+
+    #   | value |
+    #   +-------+
+    #   | 1     |
+    #   | 2     |
+    #   | 3     |
+    #   +-------+
+    #   3 rows in set
+    #   => true
+    #  == Additional config keys for the main repo config
+    #  [:render_options] Hash of render options available to all option commands to be passed to a Hirb view (see View). Since
+    # this merges with default render options, it's possible to override default render options.
+    #  [:no_auto_render] When set, turns off commandline auto-rendering of a command's output. Default is false.
+    module ClassRender
+
+      def default_options
+        default_pipe_options.merge(default_render_options.merge(BASIC_OPTIONS))
+      end
+
+      def default_pipe_options
+        @default_pipe_options ||= PIPE_OPTIONS.merge Pipe.pipe_options
+      end
+
+      def default_render_options
+        @default_render_options ||= RENDER_OPTIONS.merge Boson.repo.config[:render_options] || {}
+      end
+
+      def delete_non_render_options(opt)
+        opt.delete_if {|k,v| BASIC_OPTIONS.keys.include?(k) }
+      end
+    end
+    extend ClassRender
+
+    module Render
+      def option_parser
+        @option_parser ||= @command.render_options ? OptionParser.new(all_global_options) :
+          self.class.default_option_parser
+      end
+
+      def all_global_options
+        OptionParser.make_mergeable! @command.render_options
+        render_opts = Util.recursive_hash_merge(@command.render_options, Util.deep_copy(self.class.default_render_options))
+        merged_opts = Util.recursive_hash_merge Util.deep_copy(self.class.default_pipe_options), render_opts
+        opts = Util.recursive_hash_merge merged_opts, Util.deep_copy(BASIC_OPTIONS)
+        set_global_option_defaults opts
+      end
+
+      def set_global_option_defaults(opts)
+        if !opts[:fields].key?(:values)
+          if opts[:fields][:default]
+            opts[:fields][:values] = opts[:fields][:default]
+          else
+            if opts[:change_fields] && (changed = opts[:change_fields][:default])
+              opts[:fields][:values] = changed.is_a?(Array) ? changed : changed.values
+            end
+            opts[:fields][:values] ||= opts[:headers][:default].keys if opts[:headers] && opts[:headers][:default]
+          end
+          opts[:fields][:enum] = false if opts[:fields][:values] && !opts[:fields].key?(:enum)
+        end
+        if opts[:fields][:values]
+          opts[:sort][:values] ||= opts[:fields][:values]
+          opts[:query][:keys] ||= opts[:fields][:values]
+          opts[:query][:default_keys] ||= "*"
+        end
+        opts
+      end
+    end
+    include Render
+  end
+
+  module Scientist
+    # * Before a method returns its value, it pipes its return value through pipe commands if pipe options are specified. See Pipe.
+    # * Methods can have any number of optional views associated with them via global render options (see View). Views can be toggled
+    #   on/off with the global option --render (see OptionCommand).
+    module Render
+      attr_accessor :rendered, :render
+
+      def after_parse
+        (@global_options[:delete_options] || []).map {|e|
+          @global_options.keys.map {|k| k.to_s }.grep(/^#{e}/)
+        }.flatten.each {|e| @global_options.delete(e.to_sym) }
+      end
+
+      def process_result(result)
+        if (@rendered = can_render?)
+          if @global_options.key?(:class) || @global_options.key?(:method)
+            result = Pipe.scientist_process(result, @global_options, :config=>@command.config, :args=>@args, :options=>@current_options)
+          end
+          View.render(result, OptionCommand.delete_non_render_options(@global_options.dup), false)
+        else
+          Pipe.scientist_process(result, @global_options, :config=>@command.config, :args=>@args, :options=>@current_options)
+        end
+      rescue StandardError
+        raise Scientist::Error, $!.message, $!.backtrace
+      end
+
+      def can_render?
+        render.nil? ? command_renders? : render
+      end
+
+      def command_renders?
+        (!!@command.render_options ^ @global_options[:render]) && !Pipe.any_no_render_pipes?(@global_options)
+      end
+
+      def run_pretend_option(args)
+        super
+        @rendered = true if @global_options[:pretend]
+      end
+
+      def help_options
+        super.tap do |opts|
+          if @global_options[:usage_options]
+            opts << "--render_options=#{@global_options[:usage_options]}"
+          end
+          opts
+        end
+      end
+    end
+    extend Render
+  end
+
+  class Command
     module ScienceClassMethods
       attr_accessor :all_option_commands
 
@@ -34,31 +186,10 @@ module Boson
       end
 
       def option_command?
-        options || render_options || @option_command
+        super || render_options
       end
     end
     include Science
-  end
-
-  class Manager
-    module Science
-      def create_commands(lib, commands = lib.commands)
-        super
-        redefine_commands(lib, commands)
-      end
-
-      def redefine_commands(lib, commands)
-        option_commands = lib.command_objects(commands).select {|e| e.option_command? }
-        accepted, rejected = option_commands.partition {|e| e.args(lib) || e.arg_size }
-        if @options[:verbose] && rejected.size > 0
-          puts "Following commands cannot have options until their arguments are configured: " +
-            rejected.map {|e| e.name}.join(', ')
-        end
-        accepted.each {|cmd| Scientist.redefine_command(lib.namespace_object, cmd) }
-      end
-    end
-
-    class << self; include Science; end
   end
 
   # [*:render_options*] Hash of rendering options to pass to OptionParser. If the key :output_class is passed,
