@@ -1,3 +1,5 @@
+require 'boson/save'
+
 module Boson
   module RunnerMod
     def verbose?

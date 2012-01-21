@@ -1,3 +1,5 @@
+require 'boson/save'
+
 module Boson
   # Runner used when starting irb. To use in irb, drop this in your ~/.irbrc:
   #   require 'boson'

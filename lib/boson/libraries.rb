@@ -1,8 +1,19 @@
+require 'boson/save'
 require 'boson/namespace'
 # order of library subclasses matters
 %w{module file gem require local_file}.each {|e| require "boson/libraries/#{e}_library" }
 
 module Boson
+  class Library
+    module Libraries
+      def local?
+        is_a?(LocalFileLibrary) ||
+          (Boson.local_repo && Boson.local_repo.dir == repo_dir)
+      end
+    end
+    include Libraries
+  end
+
   class Manager
     module Libraries
       def before_create_commands(lib)

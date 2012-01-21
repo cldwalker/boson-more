@@ -1,7 +1,7 @@
 require 'boson/console_runner'
 
 module Boson
-  Repo::CONFIG.update console_defaults: []
+  CONFIG.update console_defaults: []
 
   # Additional options added to Repo:
   # [:console_defaults] Array of libraries to load at start up when used in irb. Default is to load all library files and libraries
