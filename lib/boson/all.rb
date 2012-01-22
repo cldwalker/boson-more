@@ -1,3 +1,4 @@
+require 'boson/namespacer'
 require 'boson/save'
 require 'boson/libraries'
 require 'boson/more_commands'

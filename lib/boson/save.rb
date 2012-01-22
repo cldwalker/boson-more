@@ -1,3 +1,4 @@
+require 'boson/namespacer'
 require 'boson/repo'
 require 'boson/index'
 require 'boson/repo_index'
