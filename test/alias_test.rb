@@ -1,5 +1,5 @@
 # Add library_loaded? and with_config
-describe "Boson::Alias" do
+describe "Manager" do
   def load_library(hash)
     new_attributes = {:name=>hash[:name], :commands=>[], :created_dependencies=>[], :loaded=>true}
     [:module, :commands].each {|e| new_attributes[e] = hash.delete(e) if hash[e] }
@@ -36,6 +36,19 @@ describe "Boson::Alias" do
         }.should =~ /No aliases/
         library_loaded? 'aquateen'
         Aquateen.method_defined?(:fr).should == false
+      end
+    end
+  end
+end
+
+describe "Loader" do
+  describe "load" do
+    before { reset }
+    it "loads a library and creates its class commands" do
+      with_config(:libraries=>{"blah"=>{:class_commands=>{"bling"=>"Blah.bling", "Blah"=>['hmm']}}}) do
+        load :blah, :file_string=>"module Blah; def self.bling; end; def self.hmm; end; end"
+        command_exists? 'bling'
+        command_exists? 'hmm'
       end
     end
   end

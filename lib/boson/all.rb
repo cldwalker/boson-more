@@ -1,3 +1,4 @@
+require 'boson/alias'
 require 'boson/namespacer'
 require 'boson/save'
 require 'boson/libraries'
