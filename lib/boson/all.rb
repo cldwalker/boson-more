@@ -1,5 +1,6 @@
 require 'boson/alias'
 require 'boson/namespacer'
+require 'boson/more_util'
 require 'boson/save'
 require 'boson/libraries'
 require 'boson/more_commands'
