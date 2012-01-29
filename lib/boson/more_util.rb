@@ -20,6 +20,11 @@ module Boson
       end
     end
 
+    # Returns name of top level class that conflicts if it exists. For example, for base module Boson::Commands,
+    # Boson::Commands::Hirb conflicts with Hirb if Hirb exists.
+    def top_level_class_conflict(base_module, conflicting_module)
+      (conflicting_module =~ /^#{base_module}.*::([^:]+)/) && Object.const_defined?($1) && $1
+    end
   end
   Util.extend MoreUtil
 end
