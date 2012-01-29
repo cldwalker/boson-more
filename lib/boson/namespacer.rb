@@ -103,13 +103,12 @@ module Boson
       def clean_library_commands
         @commands.delete(namespace) if namespace
         @commands += Boson.invoke(namespace).boson_commands if namespace && !@pre_defined_commands
+        super
       end
 
-      def before_library_commands
+      def set_library_commands
         @namespace = false if !(@module || @class_commands)
-      end
-
-      def after_library_commands
+        super
         @indexed_namespace = (@namespace == false) ? nil : @namespace if @index
       end
     end

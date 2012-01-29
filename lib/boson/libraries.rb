@@ -39,7 +39,8 @@ module Boson
 
     module LibrariesLoader
       def detect_additions(options={}, &block)
-        super.tap do |detected|
+        options[:object_methods] = @object_methods if !@object_methods.nil?
+        super(options, &block).tap do |detected|
           if detected[:gems]
             @gems ||= []
             @gems.concat detected[:gems]
