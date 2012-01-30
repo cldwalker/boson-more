@@ -27,7 +27,7 @@ module Boson
       Util.underscore(underscore_lib)
     end
 
-    def initialize_library_module
+    def load_commands
       @class_commands = {@module.to_s=>Array(@commands).empty? ? @module.methods(false) : @commands }
       @module = nil
       super

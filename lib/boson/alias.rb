@@ -15,11 +15,11 @@ module Boson
     include Alias
 
     module AliasLoader
-      def load_module_commands?
+      def load_commands?
         super || @class_commands
       end
 
-      def during_initialize_library_module
+      def before_load_commands
         unless @class_commands.nil? || @class_commands.empty? || @method_conflict
           Boson::Manager.create_class_aliases(@module, @class_commands)
         end

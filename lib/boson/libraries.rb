@@ -56,7 +56,8 @@ module Boson
         super
       end
 
-      def during_initialize_library_module
+      def before_load_commands
+        raise(LoaderError, "No module for library #{@name}") unless @module
         if (conflict = Util.top_level_class_conflict(Boson::Commands, @module.to_s))
           warn "Library module '#{@module}' may conflict with top level class/module '#{conflict}' references in"+
             " your libraries. Rename your module to avoid this warning."

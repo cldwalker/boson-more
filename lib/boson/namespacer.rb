@@ -85,11 +85,11 @@ module Boson
           @namespace = clean_name
           @method_conflict = true
           $stderr.puts "#{err.message}. Attempting load into the namespace #{@namespace}..."
-          initialize_library_module
+          load_commands
         end
       end
 
-      def after_initialize_library_module
+      def actual_load_commands
         @namespace = clean_name if @object_namespace
         namespace ? Namespace.create(namespace, self) : include_in_universe
       end
