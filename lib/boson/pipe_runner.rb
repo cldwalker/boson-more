@@ -37,7 +37,7 @@ module Boson
   end
 
   if defined? BinRunner
-    class BinRunner < Runner
+    class BinRunner < BareRunner
       class << self; include PipeRunner; end
     end
   end

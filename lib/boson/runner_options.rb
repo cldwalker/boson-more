@@ -57,7 +57,7 @@ module Boson
   end
 
   if defined? BinRunner
-    class BinRunner < Runner
+    class BinRunner < BareRunner
       GLOBAL_OPTIONS.update({
         :backtrace=>{:type=>:boolean, :desc=>'Prints full backtrace'},
         :verbose=>{:type=>:boolean, :desc=>"Verbose description of loading libraries, errors or help"},

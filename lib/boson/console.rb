@@ -30,7 +30,7 @@ module Boson
   end
 
   if defined? BinRunner
-    class BinRunner < Runner
+    class BinRunner < BareRunner
       GLOBAL_OPTIONS.update console:
         {:type=>:boolean,
           :desc=>"Drops into irb with default and explicit libraries loaded"}

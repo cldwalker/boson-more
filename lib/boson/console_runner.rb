@@ -4,7 +4,7 @@ module Boson
   # Runner used when starting irb. To use in irb, drop this in your ~/.irbrc:
   #   require 'boson'
   #   Boson.start
-  class ConsoleRunner < Runner
+  class ConsoleRunner < BareRunner
     class <<self
       # Starts Boson by loading configured libraries. If no default libraries are specified in the config,
       # it will load up all detected libraries. Options:

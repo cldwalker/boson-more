@@ -14,7 +14,7 @@ module Boson
     end
   end
 
-  class Runner
+  class BareRunner
     module Viewable
       def init
         View.enable

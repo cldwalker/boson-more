@@ -10,7 +10,7 @@ describe "repl_runner" do
   before { ConsoleRunner.instance_eval("@initialized = false") }
 
   it "loads default libraries and libraries in :console_defaults config" do
-    defaults = Runner.default_libraries + ['yo']
+    defaults = BareRunner.default_libraries + ['yo']
     with_config(:console_defaults=>['yo']) do
       Manager.expects(:load).with {|*args| args[0] == defaults }
       start

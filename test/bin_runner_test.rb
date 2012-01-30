@@ -99,7 +99,7 @@ describe "BinRunner" do
     end
 
     it "with index option, no existing index and core command updates index and prints index message" do
-      index :load=>Runner.all_libraries
+      index :load=>BareRunner.all_libraries
       Index.indexes[0].stubs(:exists?).returns(false)
       capture_stdout { start("--index", "libraries") }.should =~ /Generating index/
     end

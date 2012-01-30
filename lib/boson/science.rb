@@ -208,7 +208,7 @@ module Boson
   end
 
   if defined? BinRunner
-    class BinRunner < Runner
+    class BinRunner < BareRunner
       GLOBAL_OPTIONS.update(
         option_commands: {
           :type=>:boolean,

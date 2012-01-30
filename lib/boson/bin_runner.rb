@@ -6,7 +6,7 @@ module Boson
       @verbose.nil? ? Boson.const_defined?(:BinRunner) && BinRunner.options[:verbose] : @verbose
     end
   end
-  Runner.extend RunnerMod
+  BareRunner.extend RunnerMod
 
   # This class handles the boson executable (boson command execution from the commandline). Any changes
   # to your commands are immediately available from the commandline except for changes to the main config file.
@@ -21,7 +21,7 @@ module Boson
   # [:execute] Like ruby -e, this executes a string of ruby code. However, this has the advantage that all
   #            commands are available as normal methods, automatically loading as needed. This is a good
   #            way to call commands that take non-string arguments.
-  class BinRunner < Runner
+  class BinRunner < BareRunner
     GLOBAL_OPTIONS.update({
       :version=>{:type=>:boolean, :desc=>"Prints the current version"},
       :execute=>{:type=>:string, :desc=>"Executes given arguments as a one line script"},

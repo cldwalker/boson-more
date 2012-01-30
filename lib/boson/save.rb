@@ -40,7 +40,7 @@ module Boson
   end
   extend Save
 
-  class Runner
+  class BareRunner
     module Save
       def init
         add_load_path
@@ -56,7 +56,7 @@ module Boson
       def define_autoloader
         class << ::Boson.main_object
           def method_missing(method, *args, &block)
-            if Runner.autoload_command(method.to_s)
+            if BareRunner.autoload_command(method.to_s)
               send(method, *args, &block) if respond_to?(method)
             else
               super
