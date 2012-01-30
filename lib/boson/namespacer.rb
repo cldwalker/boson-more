@@ -80,7 +80,7 @@ module Boson
 
       def handle_method_conflict_error(err)
         if Boson.config[:error_method_conflicts] || namespace
-          raise MethodConflictError, err.message
+          raise err
         else
           @namespace = clean_name
           @method_conflict = true
