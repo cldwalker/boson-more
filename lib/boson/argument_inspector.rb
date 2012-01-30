@@ -19,7 +19,7 @@ module Boson::ArgumentInspector
     return if local_variables == params # nothing new found
     format_arguments(params, values, arity, num_args)
     rescue Exception
-      print_debug_message(klass, meth) if Boson::Runner.debug
+      print_debug_message(klass, meth) if Boson.debug
     ensure
       set_trace_func(nil)
   end
@@ -56,7 +56,7 @@ module Boson::ArgumentInspector
           throw :done
         end
       rescue Exception
-        print_debug_message(klass, meth) if Boson::Runner.debug
+        print_debug_message(klass, meth) if Boson.debug
       end
     }
     if arity >= 0

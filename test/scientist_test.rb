@@ -3,7 +3,7 @@ require File.join(File.dirname(__FILE__), 'test_helper')
 # Now in science.rb
 describe "Scientist" do
   before_all {
-    Runner.in_shell = nil
+    Boson.in_shell = nil
     eval <<-EOF
     module Blah
       def blah(arg1, options={})
@@ -191,5 +191,5 @@ describe "Scientist" do
       local_and_global('doh -r -- -f').should == [{}, {:render=>true}]
     end
   end
-  after_all { Runner.in_shell = false }
+  after_all { Boson.in_shell = false }
 end

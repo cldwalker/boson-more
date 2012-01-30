@@ -41,8 +41,8 @@ describe "BinRunner" do
     end
 
     # TODO: test actual uses of Runner.debug
-    it "sets Runner.debug with --debug" do
-      boson "--debug -e 'print Boson::Runner.debug'"
+    it "sets Boson.debug with --debug" do
+      boson "--debug -e 'print Boson.debug'"
       stdout.should == 'true'
     end
 

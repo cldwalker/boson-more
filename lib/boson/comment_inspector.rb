@@ -48,7 +48,7 @@ module Boson
       value = "{#{value}}" if !value[/^\s*\{/] && value[/=>/]
       mod.module_eval(value)
     rescue Exception
-      if Runner.debug
+      if Boson.debug
         warn "DEBUG: Error while evaluating @#{mattr} in module #{mod.to_s[/\w+$/]}:\n  " +
           $!.message.gsub(/\n/, "\n  ")
       end

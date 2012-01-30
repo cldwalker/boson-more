@@ -39,7 +39,7 @@ module Boson
         @command, @options, @args = parse_args(args)
 
         $:.unshift(*options[:load_path].split(":")) if options[:load_path]
-        Runner.debug = true if options[:debug]
+        Boson.debug = true if options[:debug]
         $DEBUG = true if options[:ruby_debug]
         return if early_option?(args)
 
@@ -90,7 +90,7 @@ module Boson
 
       # Loads libraries and handles non-critical options
       def init
-        Runner.in_shell = true
+        Boson.in_shell = true
         super
       end
 
