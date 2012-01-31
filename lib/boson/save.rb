@@ -47,7 +47,7 @@ module Boson
         super
       end
 
-      def autoload_command(cmd, opts={:verbose=>verbose?})
+      def autoload_command(cmd, opts={verbose: Boson.verbose})
         Index.read
         (lib = Index.find_library(cmd)) && Manager.load(lib, opts)
         lib

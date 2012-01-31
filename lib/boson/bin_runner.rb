@@ -1,13 +1,6 @@
 require 'boson/save'
 
 module Boson
-  module RunnerMod
-    def verbose?
-      @verbose.nil? ? Boson.const_defined?(:BinRunner) && BinRunner.options[:verbose] : @verbose
-    end
-  end
-  BareRunner.extend RunnerMod
-
   # This class handles the boson executable (boson command execution from the commandline). Any changes
   # to your commands are immediately available from the commandline except for changes to the main config file.
   # For those changes to take effect you need to explicitly load and index the libraries with --index.

@@ -10,6 +10,7 @@ module Boson
     # [:pager_toggle] Toggles Hirb's pager in case you'd like to pipe to another command.
     def init
       super
+      Boson.verbose = true if options[:verbose]
 
       if @options.key?(:index)
         Index.update(:verbose=>true, :libraries=>@options[:index])
