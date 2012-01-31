@@ -1,4 +1,5 @@
 require 'hirb'
+require 'boson/more_option_parser'
 
 module Boson
   # This module generates views for a command by handing it to {Hirb}[http://tagaholic.me/hirb/]. Since Hirb can be customized
