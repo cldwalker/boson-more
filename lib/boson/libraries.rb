@@ -73,6 +73,9 @@ module Boson
     include LibrariesLoader
   end
 
+  # Raised when a library's append_features returns false.
+  class AppendFeaturesFalseError < StandardError; end
+
   class Manager
     module Libraries
       def before_create_commands(lib)
