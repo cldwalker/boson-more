@@ -24,4 +24,11 @@ module Boson
     end
     extend MoreManager
   end
+
+  # [*:dependencies*] An array of libraries that this library depends on. A library won't load
+  #                   unless its dependencies are loaded first.
+  class Library
+    ATTRIBUTES << :dependencies
+    attr_reader :dependencies
+  end
 end
