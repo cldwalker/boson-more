@@ -78,6 +78,14 @@ module Boson
 
   class Manager
     module Libraries
+      def handle_load_action_error(library, load_method, err)
+        if err.is_a? Boson::AppendFeaturesFalseError
+          warn "DEBUG: Library #{library} didn't load due to append_features" if Boson.debug
+        else
+          super
+        end
+      end
+
       def before_create_commands(lib)
         super
         if lib.is_a?(FileLibrary) && lib.module
