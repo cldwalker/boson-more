@@ -95,7 +95,7 @@ module Boson
         super
       end
     end
-    include Libraries
+    extend Libraries
   end
 
   class Command
