@@ -133,5 +133,6 @@ module Boson
         end
       end
     end
+    extend Libraries
   end
 end
