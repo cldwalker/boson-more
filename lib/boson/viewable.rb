@@ -10,7 +10,7 @@ module Boson
           View.enable
         end
       end
-      class << self; include Viewable; end
+      extend Viewable
     end
   end
 
@@ -21,7 +21,7 @@ module Boson
         super
       end
     end
-    class << self; include Viewable; end
+    extend Viewable
   end
 
   class OptionParser

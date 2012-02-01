@@ -35,6 +35,7 @@ module Boson
         Boson.debug = true if options[:debug]
         $DEBUG = true if options[:ruby_debug]
         return if early_option?(args)
+        Boson.in_shell = true
 
         init
 
@@ -79,12 +80,6 @@ module Boson
             (!(Index.read && Index.find_command(@command[/\w+/])) || @command.include?(NAMESPACE)) ?
             "Error: Command '#{@command}' not found" : default_error_message
         end
-      end
-
-      # Loads libraries and handles non-critical options
-      def init
-        Boson.in_shell = true
-        super
       end
 
       # Hash of global options passed in from commandline
