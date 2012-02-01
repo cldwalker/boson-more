@@ -146,4 +146,17 @@ module Boson
     end
     extend Libraries
   end
+
+  module Scientist
+    module Libraries
+      def help_options
+        @global_options[:verbose] ? ['--verbose'] : []
+      end
+
+      def run_help_option(cmd)
+        Boson.invoke :usage, cmd.full_name + " " + help_options.join(' ')
+      end
+    end
+    extend Libraries
+  end
 end
