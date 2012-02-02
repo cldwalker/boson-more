@@ -1,4 +1,5 @@
 require 'boson/comment_inspector'
+require 'boson/more_method_inspector'
 
 module Boson
   # When deciding whether to use commented or normal Module methods, remember that commented Module methods allow
