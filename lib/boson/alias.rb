@@ -30,16 +30,16 @@ module Boson
   end
 
   class Manager
-    module AliasLib
-      def create_class_aliases(mod, class_commands)
-        class_commands.dup.each {|k,v|
-          if v.is_a?(Array)
-            class_commands.delete(k).each {|e| class_commands[e] = "#{k}.#{e}"}
-          end
-        }
-        Alias.manager.create_aliases(:any_to_instance_method, mod.to_s=>class_commands.invert)
-      end
+    def self.create_class_aliases(mod, class_commands)
+      class_commands.dup.each {|k,v|
+        if v.is_a?(Array)
+          class_commands.delete(k).each {|e| class_commands[e] = "#{k}.#{e}"}
+        end
+      }
+      Alias.manager.create_aliases(:any_to_instance_method, mod.to_s=>class_commands.invert)
+    end
 
+    module AliasLib
       def after_create_commands(lib, commands)
         create_command_aliases(lib, commands) if commands.size > 0 && !lib.no_alias_creation
       end
@@ -70,6 +70,6 @@ module Boson
         end
       end
     end
-    extend AliasLib
+    include AliasLib
   end
 end

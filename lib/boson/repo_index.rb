@@ -2,10 +2,10 @@ require 'digest/md5'
 module Boson
   # This class provides an index for commands and libraries of a given a Repo.
   # When this index updates, it detects library files whose md5 hash have changed and reindexes them.
-  # The index is stored with Marshal at config/index.marshal (relative to a Repo's root directory). 
+  # The index is stored with Marshal at config/index.marshal (relative to a Repo's root directory).
   # Since the index is marshaled, putting lambdas/procs in it will break it.If an index gets corrupted,
   # simply delete it and next time Boson needs it, the index will be recreated.
-  
+
   class RepoIndex
     attr_reader :libraries, :commands, :repo
     def initialize(repo)
@@ -21,14 +21,14 @@ module Boson
           (libraries_to_update.empty? ? "No libraries indexed" :
           "Indexing the following libraries: #{libraries_to_update.join(', ')}")
       end
-      Manager.failed_libraries = []
+      Manager.instance.failed_libraries = []
       unless libraries_to_update.empty?
         Manager.load(libraries_to_update, options.merge(:index=>true))
-        unless Manager.failed_libraries.empty?
-          $stderr.puts("Error: These libraries failed to load while indexing: #{Manager.failed_libraries.join(', ')}")
+        unless Manager.instance.failed_libraries.empty?
+          $stderr.puts("Error: These libraries failed to load while indexing: #{Manager.instance.failed_libraries.join(', ')}")
         end
       end
-      write(Manager.failed_libraries)
+      write(Manager.instance.failed_libraries)
     end
 
     # Reads and initializes index.

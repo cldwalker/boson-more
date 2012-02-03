@@ -4,7 +4,7 @@ module Boson
     module MoreManager
       def load_dependencies(lib, options={})
         lib_dependencies[lib] = Array(lib.dependencies).map do |e|
-          next if loaded?(e)
+          next if self.class.loaded?(e)
           load_once(e, options.merge(:dependency=>true)) ||
             raise(LoaderError, "Can't load dependency #{e}")
         end.compact
@@ -17,12 +17,12 @@ module Boson
       def during_after_load
         (lib_dependencies[@library] || []).each do |e|
           create_commands(e)
-          add_library(e)
+          self.class.add_library(e)
           puts "Loaded library dependency #{e.name}" if verbose
         end
       end
     end
-    extend MoreManager
+    include MoreManager
   end
 
   # [*:dependencies*] An array of libraries that this library depends on. A library won't load
