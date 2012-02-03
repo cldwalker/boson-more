@@ -5,9 +5,9 @@ module Boson
   # When deciding whether to use commented or normal Module methods, remember that commented Module methods allow
   # independence from Boson (useful for testing).
   # See CommentInspector for more about commented method attributes.
-  module Inspector
+  class Inspector
     module MoreInspector
-      def add_method_data_to_library(library)
+      def add_data
         super
         add_comment_scraped_data
       end
@@ -22,7 +22,7 @@ module Boson
         end
       end
     end
-    extend MoreInspector
+    include MoreInspector
   end
 
   # This module also saves method locations so CommentInspector
