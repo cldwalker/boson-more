@@ -18,7 +18,7 @@ module Boson
         (lib_dependencies[@library] || []).each do |e|
           create_commands(e)
           add_library(e)
-          puts "Loaded library dependency #{e.name}" if @options[:verbose]
+          puts "Loaded library dependency #{e.name}" if verbose
         end
       end
     end
