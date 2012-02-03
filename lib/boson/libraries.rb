@@ -135,7 +135,7 @@ module Boson
     include Libraries
   end
 
-  module MethodInspector
+  class MethodInspector
     module Libraries
       def find_class_method_locations(klass, meth)
         if (klass = Util.any_const_get(klass)) && (meth_location = klass.method(meth).source_location) &&

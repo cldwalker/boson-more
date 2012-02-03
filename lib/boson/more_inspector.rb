@@ -14,7 +14,7 @@ module Boson
 
       def add_comment_scraped_data
         (@store[:method_locations] || []).select {|k,(f,l)| f == @library_file }.each do |cmd, (file, lineno)|
-          scraped = CommentInspector.scrape(FileLibrary.read_library_file(file), lineno, MethodInspector.current_module)
+          scraped = CommentInspector.scrape(FileLibrary.read_library_file(file), lineno, MethodInspector.instance.current_module)
           @commands_hash[cmd] ||= {}
           MethodInspector::METHODS.each do |e|
             add_valid_data_to_config(e, scraped[e], cmd)
@@ -27,7 +27,7 @@ module Boson
 
   # This module also saves method locations so CommentInspector
   # can scrape their commented method attributes.
-  module MethodInspector
+  class MethodInspector
     module MoreInspector
       def inspector_in_file?(meth, inspector_method)
         return false if !super
@@ -36,7 +36,7 @@ module Boson
           (store[inspector_method] ||= {})[meth] = options
         end
       end
-      extend MoreInspector
     end
+    include MoreInspector
   end
 end
