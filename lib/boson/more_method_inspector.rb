@@ -58,6 +58,16 @@ module Boson
             "[#{e[0]}=#{@file_parsed_args ? e[1] : e[1].inspect}]"
         }.join(' ') : '[*unknown]'
       end
+
+      # Help string for options if a command has it.
+      def option_help
+        @options ? option_parser.to_s : ''
+      end
+
+      # keep?
+      def usage
+        basic_usage + option_help
+      end
     end
     include MoreMethodInspector
   end
