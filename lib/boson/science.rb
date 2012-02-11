@@ -1,6 +1,7 @@
 require 'boson/view'
 require 'boson/pipe'
 require 'boson/pipes'
+require 'boson/more_scientist'
 
 module Boson
   class OptionCommand
