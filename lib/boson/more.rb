@@ -14,5 +14,5 @@ require 'boson/runner_options'
 require 'boson/console'
 require 'boson/viewable'
 
-module Boson::All
+module Boson::More
 end

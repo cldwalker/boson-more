@@ -1,13 +1,13 @@
 # -*- encoding: utf-8 -*-
 require 'rubygems' unless Object.const_defined?(:Gem)
-require File.dirname(__FILE__) + "/lib/boson/all/version"
+require File.dirname(__FILE__) + "/lib/boson/more/version"
 
 Gem::Specification.new do |s|
-  s.name        = "boson-all"
-  s.version     = Boson::All::VERSION
+  s.name        = "boson-more"
+  s.version     = Boson::More::VERSION
   s.authors     = ["Gabriel Horner"]
   s.email       = "gabriel.horner@gmail.com"
-  s.homepage    = "http://github.com/cldwalker/boson-all"
+  s.homepage    = "http://github.com/cldwalker/boson-more"
   s.summary = "boson2 plugins"
   s.description =  "A collection of boson plugins that can be mixed and matched"
   s.required_rubygems_version = ">= 1.3.6"

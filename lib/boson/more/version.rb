@@ -1,5 +1,5 @@
 module Boson
-  module All
+  module More
     VERSION = '0.1.0'
   end
 end
