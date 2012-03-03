@@ -1,4 +1,6 @@
 module Boson::Commands::ViewCore
+  extend self
+
   def config
     commands = {
       'render'=>{:desc=>"Render any object using Hirb"},
@@ -6,6 +8,7 @@ module Boson::Commands::ViewCore
     }
     {:namespace=>false, :library_file=>File.expand_path(__FILE__), :commands=>commands}
   end
+
   def render(object, options={})
     Boson::View.render(object, options)
   end
