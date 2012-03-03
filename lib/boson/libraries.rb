@@ -5,6 +5,25 @@ require 'boson/more_util'
 %w{module file gem require local_file}.each {|e| require "boson/libraries/#{e}_library" }
 
 module Boson
+  # == Naming a Library Module
+  # Although you can name a library module almost anything, here's the fine print:
+  # * A module can have any name if it's the only module in a library.
+  # * If there are multiple modules in a file library, the module's name must
+  #   be a camelized version of the file's basename
+  #   i.e. ~/.boson/commands/ruby_core.rb -> RubyCore.
+  # * Although modules are evaluated under the Boson::Commands namespace, Boson
+  #   will warn you about creating modules whose name is the same as a top level
+  #   class/module. The warning is to encourage users to stay away from
+  #   error-prone libraries. Once you introduce such a module, _all_ libraries
+  #   assume the nested module over the top level module and the top level
+  #   module has to be prefixed with '::' _everywhere_.
+  #
+  # == Configuration
+  # Libraries and their commands can be configured in different ways in this order:
+  # * If library is a FileLibrary, commands be configured with a config method
+  #   attribute (see Inspector).
+  # * If a library has a module, you can set library + command attributes via
+  #   the config() callback (see Loader).
   # === Module Callbacks
   # For libraries that have a module i.e. RunnerLibrary, the following class methods
   # are invoked in the order below when loading a library:
@@ -37,6 +56,8 @@ module Boson
     end
     include Libraries
 
+    # [*:object_methods*] Boolean which detects any Object/Kernel methods created when loading a library and automatically
+    #                     adds them to a library's commands. Default is true.
     module LibrariesLoader
       def detect_additions(options={}, &block)
         options[:object_methods] = @object_methods if !@object_methods.nil?
