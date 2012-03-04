@@ -11,13 +11,11 @@ Gem::Specification.new do |s|
   s.summary = "boson2 plugins"
   s.description =  "A collection of boson plugins that can be mixed and matched"
   s.required_rubygems_version = ">= 1.3.6"
-  s.executables = ['boson']
   s.add_dependency 'boson', '>= 1.0.0'
   s.add_development_dependency 'mocha'
   s.add_development_dependency 'bacon', '>= 1.1.0'
   s.add_development_dependency 'mocha-on-bacon'
   s.add_development_dependency 'bacon-bits'
-  s.add_development_dependency 'bahia', '>= 0.3.0'
   s.files = Dir.glob(%w[{lib,test}/**/*.rb bin/* [A-Z]*.{txt,rdoc} ext/**/*.{rb,c} **/deps.rip]) + %w{Rakefile .gemspec}
   s.extra_rdoc_files = ["README.md", "LICENSE.txt"]
   s.license = 'MIT'
