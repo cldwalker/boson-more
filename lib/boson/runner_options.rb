@@ -1,5 +1,8 @@
+require 'boson/save'
+
 module Boson
   module RunnerOptions
+    # [:help]  Gives a basic help of global options. When a command is given the help shifts to a command's help.
     # [:verbose] Using this along with :help option shows more help. Also gives verbosity to other actions i.e. loading.
     # [:backtrace] Prints full backtrace on error. Default is false.
     # [:index] Updates index for given libraries allowing you to use them. This is useful if Boson's autodetection of
@@ -53,6 +56,15 @@ module Boson
         Manager.load [Boson::Commands::Core]
         puts "\n\nDEFAULT COMMANDS"
         Boson.invoke :commands, :fields=>["name", "usage", "description"], :description=>false
+      end
+    end
+
+    def execute_option_or_command(options, command, args)
+      if options[:help]
+        autoload_command command
+        Boson.invoke(:usage, command, verbose: verbose)
+      else
+        super
       end
     end
   end

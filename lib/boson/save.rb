@@ -148,4 +148,51 @@ module Boson
     end
     include Save
   end
+
+  if defined? BinRunner
+  # Any changes to your commands are immediately available from
+  # the commandline except for changes to the main config file.  For those
+  # changes to take effect you need to explicitly load and index the libraries
+  # with --index.  See RepoIndex to understand how Boson can immediately detect
+  # the latest commands.
+  class BinRunner
+    module Save
+      def autoload_command(cmd)
+        if !Boson.can_invoke?(cmd, false)
+          update_index
+          super(cmd, load_options)
+        end
+      end
+
+      def update_index
+        Index.update(verbose: verbose)
+      end
+
+      def execute_command(cmd, args)
+        @command = cmd # for external errors
+        autoload_command cmd
+        super
+      end
+
+      def command_not_found?(cmd)
+        super && (!(Index.read && Index.find_command(cmd[/\w+/])) || cmd.include?(NAMESPACE))
+      end
+
+      def command_name(cmd)
+        cmd.split(Boson::NAMESPACE)[-1]
+      end
+
+      def eval_execute_option(str)
+        define_autoloader
+        super
+      end
+
+      def default_libraries
+        super + Boson.repos.map {|e| e.config[:bin_defaults] || [] }.flatten +
+          Dir.glob('Bosonfile')
+      end
+    end
+    extend Save
+  end
+  end
 end

@@ -30,6 +30,7 @@ When using all plugins, you can use boson in irb/ripl by dropping this in ~/.irb
 * boson/more\_method\_inspector - Adds ability to scrape argument names and
   default values from commands.
 * boson/more\_scientist - Adds a few global options to option commands.
+* boson/runner\_options - Adds additional options to the boson executable.
 * boson/science - Adds pipes and several global options to option commands.
   Requires hirb.
 * boson/namespacer - Adds namespaces to commands.

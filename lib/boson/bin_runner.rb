@@ -1,59 +1,36 @@
-require 'boson/save'
-
 module Boson
-  # This class handles the boson executable (boson command execution from the commandline). Any changes
-  # to your commands are immediately available from the commandline except for changes to the main config file.
-  # For those changes to take effect you need to explicitly load and index the libraries with --index.
-  # See RepoIndex to understand how Boson can immediately detect the latest commands.
+  # This class handles the boson executable.
   #
   # Usage for the boson shell command looks like this:
   #   boson [GLOBAL OPTIONS] [COMMAND] [ARGS] [COMMAND OPTIONS]
   #
-  # The boson executable comes with these global options:
-  # [:help]  Gives a basic help of global options. When a command is given the help shifts to a command's help.
-  # [:execute] Like ruby -e, this executes a string of ruby code. However, this has the advantage that all
-  #            commands are available as normal methods, automatically loading as needed. This is a good
-  #            way to call commands that take non-string arguments.
+  # The boson executable comes with several global options: :version, :execute,
+  # :ruby_debug, :debug, and :load_path.
   class BinRunner < BareRunner
-    GLOBAL_OPTIONS.update({
-      :version=>{:type=>:boolean, :desc=>"Prints the current version"},
-      :execute=>{:type=>:string, :desc=>"Executes given arguments as a one line script"},
-      :ruby_debug=>{:type=>:boolean, :desc=>"Sets $DEBUG", :alias=>'D'},
-      :debug=>{:type=>:boolean, :desc=>"Prints debug info for boson"},
-      :load_path=>{:type=>:string, :desc=>"Add to front of $LOAD_PATH", :alias=>'I'}
-    })
+    GLOBAL_OPTIONS.update(
+      version: {type: :boolean, desc: "Prints the current version"},
+      execute: {type: :string,
+        desc: "Executes given arguments as a one line script"},
+      ruby_debug: {type: :boolean, desc: "Sets $DEBUG", alias: 'D'},
+      debug: {type: :boolean, desc: "Prints debug info for boson"},
+      load_path: {type: :string, desc: "Add to front of $LOAD_PATH", alias: 'I'}
+    )
 
     module API
       attr_accessor :command
 
-      # Starts, processes and ends a commandline request.
-      def start(args=ARGV)
-        super
-        @command, @options, @args = parse_args(args)
-
-        $:.unshift(*options[:load_path].split(":")) if options[:load_path]
-        Boson.debug = true if options[:debug]
-        $DEBUG = true if options[:ruby_debug]
-        return if early_option?(args)
-        Boson.in_shell = true
-
-        init
-
-        if @options[:help]
-          autoload_command @command
-          Boson.invoke(:usage, @command, verbose: verbose)
-        elsif @options[:execute]
-          define_autoloader
-          Boson.main_object.instance_eval @options[:execute]
-        else
-          execute_command(@command, @args)
-        end
-      rescue NoMethodError
-        abort_with no_method_error_message
-      rescue
-        abort_with default_error_message
+      # Executes functionality from either an option or a command
+      def execute_option_or_command(options, command, args)
+        options[:execute] ? eval_execute_option(options[:execute]) :
+          execute_command(command, args)
       end
 
+      # Evaluates :execute option.
+      def eval_execute_option(str)
+        Boson.main_object.instance_eval str
+      end
+
+      # Returns true if an option does something and exits early
       def early_option?(args)
         if @options[:version]
           puts("boson #{Boson::VERSION}")
@@ -66,67 +43,72 @@ module Boson
         end
       end
 
+      # Determines verbosity of this class
       def verbose
         false
       end
 
-      def no_method_error_message #:nodoc:
+      # Handles no method errors
+      def no_method_error_message(err)
         @command = @command.to_s
-        if $!.backtrace.grep(/`(invoke|full_invoke)'$/).empty? ||
-          !$!.message[/undefined method `(\w+\.)?#{@command.split(NAMESPACE)[-1]}'/]
-            default_error_message
+        if err.backtrace.grep(/`(invoke|full_invoke)'$/).empty? ||
+          !err.message[/undefined method `(\w+\.)?#{command_name(@command)}'/]
+            default_error_message($!)
         else
-          @command.to_s[/\w+/] &&
-            (!(Index.read && Index.find_command(@command[/\w+/])) || @command.include?(NAMESPACE)) ?
-            "Error: Command '#{@command}' not found" : default_error_message
+          command_not_found?(@command) ?
+            "Error: Command '#{@command}' not found" : default_error_message(err)
         end
       end
 
-      # Hash of global options passed in from commandline
-      def options
-        @options ||= {}
+      # Determine command name given full command name. Overridden by namespaces
+      def command_name(cmd)
+        cmd
       end
 
-      #:stopdoc:
-      def default_error_message
-        "Error: #{$!.message}"
+      # Determines if a NoMethodError is a command not found error
+      def command_not_found?(cmd)
+        cmd[/\w+/]
       end
 
-      def autoload_command(cmd)
-        if !Boson.can_invoke?(cmd, false)
-          update_index
-          super(cmd, load_options)
-        end
-      end
-
-      def update_index
-        Index.update(verbose: verbose)
-      end
-
-      def default_libraries
-        super + Boson.repos.map {|e| e.config[:bin_defaults] || [] }.flatten +
-          Dir.glob('Bosonfile')
-      end
-
-      def execute_command(cmd, args)
-        @command = cmd # for external errors
-        autoload_command cmd
-        super
+      # Constructs error message
+      def default_error_message(err)
+        "Error: #{err.message}"
       end
 
       def print_usage_header
         puts "boson [GLOBAL OPTIONS] [COMMAND] [ARGS] [COMMAND OPTIONS]\n\n"
       end
 
+      # prints full usage
       def print_usage
         print_usage_header
         @option_parser.print_usage_table
       end
-      #:startdoc:
+    end
+    extend API
+
+    # Starts, processes and ends a commandline request.
+    def self.start(args=ARGV)
+      super
+      @command, @options, @args = parse_args(args)
+
+      $:.unshift(*options[:load_path].split(":")) if options[:load_path]
+      Boson.debug = true if options[:debug]
+      $DEBUG = true if options[:ruby_debug]
+      return if early_option?(args)
+      Boson.in_shell = true
+
+      init
+      execute_option_or_command(@options, @command, @args)
+    rescue NoMethodError
+      abort_with no_method_error_message($!)
+    rescue
+      abort_with default_error_message($!)
     end
 
-    class << self
-      include API
+    # Hash of global options passed in from commandline
+    def self.options
+      @options ||= {}
     end
   end
 end
