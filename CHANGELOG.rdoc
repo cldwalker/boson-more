@@ -1,0 +1,5 @@
+== 0.2
+* Only require boson/console in irbrc
+
+== 0.1
+* Initial release
