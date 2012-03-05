@@ -15,7 +15,7 @@ To only use certain plugins, require those plugins in ~/.bosonrc.
 
 When using all plugins, you can use boson in irb/ripl by dropping this in ~/.irbrc:
 
-    require 'boson'
+    require 'boson/console'
     Boson.start
 
 

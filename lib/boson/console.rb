@@ -1,3 +1,4 @@
+require 'boson'
 require 'boson/console_runner'
 
 module Boson
