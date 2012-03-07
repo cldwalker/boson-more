@@ -1,3 +1,6 @@
+== 0.2.1
+* Fix BareRunner.load_options
+
 == 0.2
 * Only require boson/console in irbrc
 
