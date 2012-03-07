@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.summary = "boson2 plugins"
   s.description =  "A collection of boson plugins that can be mixed and matched"
   s.required_rubygems_version = ">= 1.3.6"
-  s.add_dependency 'boson', '>= 1.0.0'
+  s.add_dependency 'boson', '>= 1.1.0'
   s.add_development_dependency 'mocha'
   s.add_development_dependency 'bacon', '>= 1.1.0'
   s.add_development_dependency 'mocha-on-bacon'
