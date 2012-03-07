@@ -67,6 +67,10 @@ module Boson
         super
       end
     end
+
+    def load_options
+      super.update(verbose: @options[:verbose])
+    end
   end
 
   if defined? BinRunner
