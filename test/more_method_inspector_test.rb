@@ -1,10 +1,24 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
+require 'boson/more_method_inspector'
 
 describe "MethodInspector" do
-  before_all { MethodInspector.mod_store = {} }
   describe "commands module with" do
+    before_all { eval "module ::Boson::Commands::Zzz; end" }
+    before_all { MethodInspector.instance = nil }
+
+    def method_inspector
+      MethodInspector.instance
+    end
+
+    def parse(string)
+      Inspector.enable
+      ::Boson::Commands::Zzz.module_eval(string)
+      Inspector.disable
+      method_inspector.store
+    end
+
     it "not all method attributes set causes method_locations to be set" do
-      MethodInspector.stubs(:find_method_locations).returns(["/some/path", 10])
+      method_inspector.stubs(:find_method_locations).returns(["/some/path", 10])
       parsed = parse "desc 'yo'; def yo; end; options :yep=>1; def yep; end; " +
         "option :b, :boolean; config :a=>1; desc 'z'; options :a=>1; def az; end"
       parsed[:method_locations].key?('yo').should == true
@@ -13,7 +27,7 @@ describe "MethodInspector" do
     end
 
     it "no find_method_locations doesn't set method_locations" do
-      MethodInspector.stubs(:find_method_locations).returns(nil)
+      method_inspector.stubs(:find_method_locations).returns(nil)
       parse("def bluh; end")[:method_locations].key?('bluh').should == false
     end
   end

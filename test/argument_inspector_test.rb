@@ -7,11 +7,11 @@ describe "scrape_with_eval" do
     Inspector.enable
     ::Boson::Commands::Aaa.module_eval(string)
     Inspector.disable
-    MethodInspector.store[:args]['blah']
+    MethodInspector.instance.store[:args]['blah']
   end
 
   before_all { eval "module ::Boson::Commands::Aaa; end"; }
-  before { MethodInspector.mod_store[::Boson::Commands::Aaa] = {} }
+  before { MethodInspector.instance = nil }
 
   it "determines arguments with literal defaults" do
     args_from("def blah(arg1,arg2='val2'); end").should == [['arg1'], ['arg2','val2']]
