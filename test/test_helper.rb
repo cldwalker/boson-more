@@ -9,9 +9,11 @@ Boson.constants.each {|e| Object.const_set(e, Boson.const_get(e)) unless Object.
 ENV['BOSONRC'] = File.dirname(__FILE__) + '/.bosonrc'
 ENV['BOSON_HOME'] = File.dirname(__FILE__)
 
-# make local so it doesn't pick up my real boson dir
-Boson.repo.dir = File.dirname(__FILE__)
-Boson.instance_variable_set "@repos", [Boson.repo]
+if Boson.respond_to?(:repo)
+  # make local so it doesn't pick up my real boson dir
+  Boson.repo.dir = File.dirname(__FILE__)
+  Boson.instance_variable_set "@repos", [Boson.repo]
+end
 
 module TestHelpers
   def assert_error(error, message=nil)
@@ -128,38 +130,6 @@ module TestHelpers
   end
 
   attr_reader :stderr
-
-  if ENV['RSPEC']
-    def should_not_raise(&block)
-      block.should_not raise_error
-    end
-  else
-    # Since rspec doesn't allow should != or should.not
-    Object.send(:define_method, :should_not) {|*args, &block|
-      should.not(*args, &block)
-    }
-    def should_not_raise(&block)
-      should.not.raise &block
-    end
-  end
 end
 
-if ENV['RSPEC']
-  module RspecBits
-    def before_all(&block)
-      before(:all, &block)
-    end
-
-    def after_all(&block)
-      after(:all, &block)
-    end
-  end
-
-  RSpec.configure {|c|
-    c.mock_with :mocha
-    c.extend RspecBits
-    c.include TestHelpers
-  }
-else
-  Bacon::Context.send :include, TestHelpers
-end
+Bacon::Context.send :include, TestHelpers
