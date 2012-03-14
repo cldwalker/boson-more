@@ -1,4 +1,5 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
+require 'boson/more_commands'
 
 describe "WebCore" do
   it "#get with no options" do
