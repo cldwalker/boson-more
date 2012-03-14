@@ -1,3 +1,4 @@
+require 'boson/comment_inspector'
 require File.join(File.dirname(__FILE__), 'test_helper')
 
 describe "CommentInspector" do

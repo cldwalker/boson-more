@@ -1,4 +1,5 @@
 require File.join(File.dirname(__FILE__), 'test_helper')
+require 'boson/namespacer'
 
 describe "Command" do
   describe ".find" do

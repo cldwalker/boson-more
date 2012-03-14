@@ -2,6 +2,7 @@ require 'boson/commands/core'
 require 'boson/commands/web_core'
 require 'boson/commands/view_core'
 require 'boson/bare_runner'
+require 'boson/save'
 require 'fileutils'
 
 Boson::BareRunner::DEFAULT_LIBRARIES << Boson::Commands::Core
