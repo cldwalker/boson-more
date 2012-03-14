@@ -1,3 +1,5 @@
+require 'test/test_helper'
+
 describe "Loader" do
   describe "load" do
     before { reset }

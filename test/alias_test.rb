@@ -1,9 +1,12 @@
+require 'boson/alias'
+require 'test/test_helper'
+
 # Add library_loaded? and with_config
 describe "Manager" do
   def load_library(hash)
     new_attributes = {:name=>hash[:name], :commands=>[], :created_dependencies=>[], :loaded=>true}
     [:module, :commands].each {|e| new_attributes[e] = hash.delete(e) if hash[e] }
-    Manager.expects(:call_load_action).returns(Library.new(new_attributes))
+    Manager.instance.expects(:call_load_action).returns(Library.new(new_attributes))
     Manager.load([hash[:name]])
   end
 
@@ -15,7 +18,7 @@ describe "Manager" do
 
     it "created with command specific config" do
       with_config(:command_aliases=>{'frylock'=>'fr'}) do
-        Manager.expects(:create_instance_aliases).with({"Aquateen"=>{"frylock"=>"fr"}})
+        Manager.instance.expects(:create_instance_aliases).with({"Aquateen"=>{"frylock"=>"fr"}})
         load_library :name=>'aquateen', :commands=>['frylock'], :module=>Aquateen
         library_loaded? 'aquateen'
       end
@@ -23,7 +26,7 @@ describe "Manager" do
 
     it "created with config command_aliases" do
       with_config(:command_aliases=>{"frylock"=>"fr"}) do
-        Manager.expects(:create_instance_aliases).with({"Aquateen"=>{"frylock"=>"fr"}})
+        Manager.instance.expects(:create_instance_aliases).with({"Aquateen"=>{"frylock"=>"fr"}})
         load_library :name=>'aquateen', :commands=>['frylock'], :module=>Aquateen
         library_loaded? 'aquateen'
       end

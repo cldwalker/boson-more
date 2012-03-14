@@ -1,3 +1,5 @@
+require 'test/test_helper'
+
 describe "Loader" do
   it "loads a library and creates its class commands" do
     with_config(:libraries=>{"blah"=>{:class_commands=>{"bling"=>"Blah.bling", "Blah"=>['hmm']}}}) do

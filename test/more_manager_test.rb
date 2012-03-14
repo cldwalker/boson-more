@@ -1,3 +1,5 @@
+require 'test/test_helper'
+
 describe "Loader" do
   before { Gem.stubs(:loaded_specs).returns({}) }
   describe 'load' do
