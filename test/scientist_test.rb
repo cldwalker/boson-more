@@ -1,3 +1,6 @@
+require 'boson'
+require 'boson/science'
+require 'boson/view'
 require File.join(File.dirname(__FILE__), 'test_helper')
 
 # Now in science.rb

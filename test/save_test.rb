@@ -1,3 +1,7 @@
+require 'boson'
+require 'boson/save'
+require 'test/test_helper'
+
 describe "BinRunner" do
   # TODO: moar acceptance tests
   xit "basic command executes" do

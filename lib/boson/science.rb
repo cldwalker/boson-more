@@ -2,6 +2,8 @@ require 'boson/view'
 require 'boson/pipe'
 require 'boson/pipes'
 require 'boson/more_scientist'
+require 'boson/save'
+require 'boson/more_util'
 
 module Boson
   class OptionCommand
@@ -267,7 +269,9 @@ module Boson
     SCRAPEABLE_METHODS << :render_options
   end
 
+  if defined? CommentInspector
   module CommentInspector
     EVAL_ATTRIBUTES << :render_options
+  end
   end
 end
