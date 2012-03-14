@@ -1,3 +1,6 @@
+require 'boson'
+require 'boson/repo_index'
+require 'boson/save'
 require File.join(File.dirname(__FILE__), 'test_helper')
 
 describe "RepoIndex" do

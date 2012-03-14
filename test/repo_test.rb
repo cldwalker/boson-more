@@ -1,3 +1,4 @@
+require 'boson/repo'
 require File.join(File.dirname(__FILE__), 'test_helper')
 
 describe "config" do

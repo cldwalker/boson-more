@@ -1,3 +1,5 @@
+require 'boson'
+require 'boson/namespacer'
 require File.join(File.dirname(__FILE__), 'test_helper')
 
 describe "Loader" do

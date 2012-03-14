@@ -1,7 +1,16 @@
+require 'boson'
+require 'boson/bin_runner'
+require 'test/test_helper'
+
 describe "BinRunner" do
   describe "at commandline" do
+    def aborts_with(regex)
+      BinRunner.expects(:abort).with {|e| e[regex] }
+      yield
+    end
+
     def start(*args)
-      Hirb.stubs(:enable)
+      # Hirb.stubs(:enable)
       BinRunner.start(args)
     end
 
