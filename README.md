@@ -91,7 +91,7 @@ Please report them [on github](http://github.com/cldwalker/boson-more/issues).
 * http://tagaholic.me/2009/10/19/how-boson-enhances-your-irb-experience.html
 ## TODO
 
-* Actually have working tests
+* Fix todo tests
 * Clean up plugins and move their files into separates directories
 * Clean up plugins that unintentionally depend on each other
 * Clean up docs which are currently strewn across plugins
