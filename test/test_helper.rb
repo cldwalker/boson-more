@@ -4,8 +4,15 @@ require 'mocha'
 require 'mocha-on-bacon'
 require 'boson'
 require 'fileutils'
+
+# hack to allow multiple tests to run so that all Boson::* constants become top-level
+if ARGV.size > 1
+  require 'boson/bin_runner'
+  require 'boson/more'
+end
 Object.send :remove_const, :OptionParser
 Boson.constants.each {|e| Object.const_set(e, Boson.const_get(e)) unless Object.const_defined?(e) }
+
 ENV['BOSONRC'] = File.dirname(__FILE__) + '/.bosonrc'
 ENV['BOSON_HOME'] = File.dirname(__FILE__)
 

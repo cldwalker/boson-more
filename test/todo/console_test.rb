@@ -1,6 +1,7 @@
 require 'boson/console'
 require File.join(File.dirname(__FILE__), 'test_helper')
 
+# TODO: fix default_libraries picking up local defaults
 describe "repl_runner" do
   def start(hash={})
     Boson.start(hash.merge(:verbose=>false))
