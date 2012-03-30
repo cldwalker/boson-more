@@ -37,6 +37,8 @@ When using all plugins, you can use boson in irb/ripl by dropping this in ~/.irb
 * boson/save - Allows libraries and commands to be saved and loaded quickly.
   Necessary for using old boson.
 * boson/viewable - Adds rendering to commands. Requires hirb.
+* boson/url\_libraries -  Automatically opens all commands under url/ in a browser.
+  Assumes commands generate url strings.Inspired by [queriac](http://github.com/cldwalker/queriac).
 
 ## Features
 
