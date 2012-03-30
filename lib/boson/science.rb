@@ -9,7 +9,6 @@ module Boson
   class OptionCommand
     BASIC_OPTIONS.update(
       :delete_options=>{:type=>:array, :desc=>'Deletes global options starting with given strings' },
-      :usage_options=>{:type=>:string, :desc=>"Render options to pass to usage/help"},
       :render=> {:type=>:boolean, :desc=>"Toggle a command's default rendering behavior"})
     PIPE_OPTIONS = {
       :sort=>{:type=>:string, :desc=>"Sort by given field"},
@@ -149,15 +148,6 @@ module Boson
       def run_pretend_option(args)
         super
         @rendered = true if @global_options[:pretend]
-      end
-
-      def help_options
-        super.tap do |opts|
-          if @global_options[:usage_options]
-            opts << "--render_options=#{@global_options[:usage_options]}"
-          end
-          opts
-        end
       end
     end
     extend Render
