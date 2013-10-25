@@ -24,7 +24,8 @@ module Boson::Commands::WebCore
   def self.def_which_requires(meth, *libs, &block)
     define_method(meth) do |*args|
       libs.each {|e| require e }
-      define_method(meth, block).call(*args)
+      define_method(meth, block)
+      send(meth, *args)
     end
   end
 
