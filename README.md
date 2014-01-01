@@ -91,6 +91,7 @@ Please report them [on github](http://github.com/cldwalker/boson-more/issues).
 * http://tagaholic.me/2009/10/14/boson-command-your-ruby-universe.html
 * http://tagaholic.me/2009/10/15/boson-and-hirb-interactions.html
 * http://tagaholic.me/2009/10/19/how-boson-enhances-your-irb-experience.html
+
 ## TODO
 
 * Fix todo tests

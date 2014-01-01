@@ -1,3 +1,6 @@
+== 0.3.0
+* Fix to support ruby 2.X
+
 == 0.2.2
 * Fix help option broken by 1.1.1 boson
 * Add url_libraries plugin
