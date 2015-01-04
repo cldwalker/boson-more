@@ -34,11 +34,7 @@ module Boson
     # Reads and initializes index.
     def read
       return if @read
-      @libraries, @commands, @lib_hashes = exists? ?
-        File.open(marshal_file, 'rb') do |f|
-          f.flock(File::LOCK_EX)
-          Marshal.load(f)
-        end : [[], [], {}]
+      @libraries, @commands, @lib_hashes = exists? ? ( File.open(marshal_file, 'rb') { |f| f.flock(File::LOCK_EX); Marshal.load(f) } ) : [[], [], {}]
       delete_stale_libraries_and_commands
       set_command_namespaces
       @read = true
