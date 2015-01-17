@@ -34,11 +34,7 @@ module Boson
     # Reads and initializes index.
     def read
       return if @read
-      @libraries, @commands, @lib_hashes = exists? ?
-        File.open(marshal_file, 'rb') do |f|
-          f.flock(File::LOCK_EX)
-          Marshal.load(f)
-        end : [[], [], {}]
+      @libraries, @commands, @lib_hashes = exists? ? load_index_from_file : [[], [], {}]
       delete_stale_libraries_and_commands
       set_command_namespaces
       @read = true
@@ -129,6 +125,13 @@ module Boson
         h[e] = Digest::MD5.hexdigest(File.read(lib_file)) if File.exists?(lib_file)
         h
       }
+    end
+
+    def load_index_from_file
+      File.open(marshal_file, 'rb') do |f|
+        f.flock(File::LOCK_EX)
+        Marshal.load(f)
+      end
     end
     #:startdoc:
   end
